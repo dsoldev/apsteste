@@ -1,0 +1,23 @@
+name: GitHub Classroom Workflow
+on: [push]
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  build:
+    name: Autograding
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Write OpenAI secret key to config
+        run: echo "OPENAI_SECRET_KEY=${{ secrets.OPENAI_SECRET_KEY }}" > openai_config.txt
+      - uses: education/autograding@v1
+      - name: Upload feedback.txt as artifact
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: feedback
+          path: feedback.txt
